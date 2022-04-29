@@ -97,6 +97,9 @@ int main()
     // Load models
     Model TVRocko((char*)"Models/TVRocko/TVRocko.obj");
     Model SillonGrandeRocko((char*)"Models/SillonGrandeRocko/SILLON_ROCKO.obj");
+    Model SillonChicoRocko((char*)"Models/Sillon/SillonChico.obj");
+    Model Fachada((char*)"Models/Fachada/Casarocko.obj");
+    Model LamparaRocko((char*)"Models/LamparaRocko/Lampara_Rocko.obj");
 
     glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 
@@ -125,10 +128,37 @@ int main()
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
         // Draw the loaded model
-        glm::mat4 model(1);
+        glm::mat4 model = glm::mat4(1);
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
        // TVRocko.Draw(shader);
+        //SillonGrandeRocko.Draw(shader);
+        Fachada.Draw(shader);
+
+
+        //Lampara
+        model = glm::mat4(1);;
+        model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
+        model = glm::translate(model, glm::vec3(1.0f, 3.0f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        LamparaRocko.Draw(shader);
+
+        ////SillonGrandeRocko
+        model = glm::mat4(1);;
+        model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+        model = glm::translate(model, glm::vec3(-4.0f, 0.3f, 15.0f));
+        model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
         SillonGrandeRocko.Draw(shader);
+
+        //SillonChico
+        model = glm::mat4(1);;
+        model = glm::scale(model, glm::vec3(0.08f, 0.08f, 0.08f));
+        model = glm::translate(model, glm::vec3(8.0f, 5.5f, 0.0f));
+        model = glm::rotate(model, glm::radians(-180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+       
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        SillonChicoRocko.Draw(shader);
+
         // Swap the buffers
         glfwSwapBuffers(window);
     }
