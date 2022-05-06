@@ -100,6 +100,8 @@ int main()
     Model SillonChicoRocko((char*)"Models/Sillon/SillonChico.obj");
     Model Fachada((char*)"Models/Fachada/Casarocko.obj");
     Model LamparaRocko((char*)"Models/LamparaRocko/Lampara_Rocko.obj");
+    Model MesaRocko((char*)"Models/MesaRocko/mesaRocko.obj");
+    Model AspiradoraRocko((char*)"Models/AspiradoraRocko/AspiradoraRocko.obj");
 
     glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 
@@ -137,27 +139,52 @@ int main()
 
         //Lampara
         model = glm::mat4(1);;
-        model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
-        model = glm::translate(model, glm::vec3(1.0f, 3.0f, 0.0f));
+        model = glm::translate(model, glm::vec3(0.3f, 0.46f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.12f, 0.12f, 0.12f));
+        model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
         LamparaRocko.Draw(shader);
 
         ////SillonGrandeRocko
         model = glm::mat4(1);;
-        model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
-        model = glm::translate(model, glm::vec3(-4.0f, 0.3f, 15.0f));
+        model = glm::translate(model, glm::vec3(-0.68f, 0.445f, 1.3f));
+        model = glm::scale(model, glm::vec3(0.12f, 0.12f, 0.15f));
         model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
         SillonGrandeRocko.Draw(shader);
 
         //SillonChico
         model = glm::mat4(1);;
-        model = glm::scale(model, glm::vec3(0.08f, 0.08f, 0.08f));
-        model = glm::translate(model, glm::vec3(8.0f, 5.5f, 0.0f));
+        model = glm::translate(model, glm::vec3(0.65f, 0.46f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.06f, 0.06f, 0.06f));
         model = glm::rotate(model, glm::radians(-180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-       
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
         SillonChicoRocko.Draw(shader);
+
+
+        //TVRocko
+        model = glm::mat4(1);;
+        model = glm::translate(model, glm::vec3(0.8f, 0.395f, 1.85f));
+        model = glm::scale(model, glm::vec3(0.12f, 0.12f, 0.12f));
+        model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        TVRocko.Draw(shader);
+
+        //mesaRocko
+        model = glm::mat4(1);;
+        model = glm::translate(model, glm::vec3(-0.3f, 0.30f, 1.15f));
+        model = glm::scale(model, glm::vec3(0.18f, 0.18f, 0.18f));
+        model = glm::rotate(model, glm::radians(110.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        MesaRocko.Draw(shader);
+
+        //AspiradoraRocko
+        model = glm::mat4(1);;
+        model = glm::translate(model, glm::vec3(1.0f, 0.40f, 0.5f));
+        model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
+        model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        AspiradoraRocko.Draw(shader);
 
         // Swap the buffers
         glfwSwapBuffers(window);
