@@ -31,6 +31,9 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void MouseCallback(GLFWwindow* window, double xPos, double yPos);
 void DoMovement();
+void animacionPuerta();
+void animacionLampara();
+void animacionAspiradora();
 
 
 // Camera
@@ -38,6 +41,27 @@ Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 bool keys[1024];
 GLfloat lastX = 400, lastY = 300;
 bool firstMouse = true;
+
+//Animaciones
+bool abrirPuerta = false;
+bool cerrarPuerta = false;
+bool tirarLampara = false;
+bool circuitoAspiradora = false;
+
+bool recorrido1 = true;
+bool recorrido2 = false;
+bool recorrido3 = false;
+bool recorrido4 = false;
+
+//movimientos
+float movAspiradoraX = 0.0;
+float movAspiradoraZ = 0.0;
+
+//rotaciones
+float rotPuerta = 0.0;
+float rotLampara = 0.0;
+float rotAspiradora = 0.0;
+
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
@@ -121,6 +145,9 @@ int main()
         // Check and call events
         glfwPollEvents();
         DoMovement();
+        animacionPuerta();
+        animacionLampara();
+        animacionAspiradora();
 
         // Clear the colorbuffer
         glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
@@ -142,9 +169,10 @@ int main()
 
         //Lampara
         model = glm::mat4(1);;
-        model = glm::translate(model, glm::vec3(0.3f, 0.46f, 0.0f));
+        model = glm::translate(model, glm::vec3(0.2f, 0.46f, 0.0f));
         model = glm::scale(model, glm::vec3(0.12f, 0.12f, 0.12f));
         model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(rotLampara), glm::vec3(1.0f, 0.0f, 0.0f));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
         LamparaRocko.Draw(shader);
 
@@ -183,9 +211,11 @@ int main()
 
         //AspiradoraRocko
         model = glm::mat4(1);;
-        model = glm::translate(model, glm::vec3(1.0f, 0.40f, 0.5f));
+        model = glm::translate(model, glm::vec3(1.7f, 0.40f, 1.4f));
+        model = glm::translate(model, glm::vec3(movAspiradoraX, 0, movAspiradoraZ));
         model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
-        model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(rotAspiradora), glm::vec3(0.0f, 1.0f, 0.0f));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
         AspiradoraRocko.Draw(shader);
 
@@ -208,6 +238,7 @@ int main()
         //PuertaPrincipal
         model = glm::mat4(1);;
         model = glm::translate(model, glm::vec3(1.39f, 0.85f, 2.1f));
+        model = glm::rotate(model, glm::radians(rotPuerta), glm::vec3(0.0f, 1.0f, 0.0));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
         PuertaRocko.Draw(shader);
 
@@ -223,6 +254,7 @@ int main()
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
         PuertaRocko.Draw(shader);
 
+        glBindVertexArray(0);
         // Swap the buffers
         glfwSwapBuffers(window);
     }
@@ -256,6 +288,131 @@ void DoMovement()
         camera.ProcessKeyboard(RIGHT, deltaTime);
     }
 
+    if (keys[GLFW_KEY_I])
+    {
+        abrirPuerta = true;
+    }
+    if (keys[GLFW_KEY_O])
+    {
+        cerrarPuerta = true;
+    }
+    if (keys[GLFW_KEY_K])
+    {
+        tirarLampara = true;
+        rotLampara = 0.0f;
+    }
+    if (keys[GLFW_KEY_L])
+    {
+        circuitoAspiradora = true;
+    }
+    if (keys[GLFW_KEY_J])
+    {
+        circuitoAspiradora = false;
+
+    }
+
+    if (keys[GLFW_KEY_R])
+    {
+        rotLampara = 0.0f;
+        rotPuerta = 0.0;
+    }
+
+}
+
+void animacionPuerta() {
+    if (abrirPuerta && rotPuerta<90)
+    {
+        rotPuerta += 1.0f;
+        if (rotPuerta == 90)
+        {
+            abrirPuerta = false;
+        }
+    }
+    else {
+        abrirPuerta = false;
+    }
+    if (cerrarPuerta && rotPuerta>0)
+    {
+        rotPuerta -= 1.0f;
+        if (rotPuerta == 0)
+        {
+            cerrarPuerta = false;
+        }
+    }
+    else {
+        cerrarPuerta = false;
+    }
+}
+
+void animacionLampara() {
+    if (tirarLampara && rotLampara > -90)
+    {
+        rotLampara -= 1.0f;
+        if (rotLampara == -90)
+        {
+            tirarLampara = false;
+        }
+    }
+    else {
+        tirarLampara = false;        
+    }
+  
+}
+
+void animacionAspiradora()
+{
+
+    //Movimiento de la Aspiradora
+    if (circuitoAspiradora)
+    {
+        if (recorrido1)
+        {
+            rotAspiradora = 0;
+            movAspiradoraZ   -= 0.005f;
+            if (movAspiradoraZ < -1)
+            {
+                recorrido1 = false;
+                recorrido2 = true;
+            }
+        }
+        if (recorrido2)
+        {
+            rotAspiradora = 90;
+            movAspiradoraX -= 0.005f;
+
+           /* movAspiradoraX += 0.007071f;
+            movAspiradoraZ -= 0.007071f;*/
+            if (movAspiradoraX < -1.5)
+            {
+                recorrido2 = false;
+                recorrido3 = true;
+
+            }
+        }
+
+        if (recorrido3)
+        {
+            rotAspiradora = 215;
+            movAspiradoraX += 0.002867f;
+            movAspiradoraZ += 0.004095f;
+            if (movAspiradoraZ > 0)
+            {
+                recorrido3 = false;
+                recorrido4 = true;
+            }
+        }
+        if (recorrido4)
+        {
+            rotAspiradora = -90;
+            movAspiradoraX += 0.005f;
+            if (movAspiradoraX > 0)
+            {
+                recorrido4 = false;
+                recorrido1 = true;
+            }
+        }
+
+    }
 }
 
 // Is called whenever a key is pressed/released via GLFW
