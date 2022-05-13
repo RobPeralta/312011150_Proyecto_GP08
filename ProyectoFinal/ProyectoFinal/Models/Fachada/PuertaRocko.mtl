@@ -1,7 +1,7 @@
-# Blender MTL File: 'None'
+# Blender MTL File: 'puerta.blend'
 # Material Count: 1
 
-newmtl lambert2SG.001
+newmtl PuertaRocko:lambert2SG
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.000000 0.000000 0.000000
@@ -10,4 +10,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 1
-map_Kd CuadroGarabatoRocko.jpg
+map_Kd PuertaRocko.jpg
