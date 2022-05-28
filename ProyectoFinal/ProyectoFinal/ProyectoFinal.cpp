@@ -34,6 +34,8 @@ void DoMovement();
 void animacionPuerta();
 void animacionLampara();
 void animacionAspiradora();
+void animacionRefrigerador();
+void animacionEstufa();
 
 
 // Camera
@@ -47,6 +49,10 @@ bool abrirPuerta = false;
 bool cerrarPuerta = false;
 bool tirarLampara = false;
 bool circuitoAspiradora = false;
+bool abrirRefrigerador = false;
+bool cerrarRefrigerador = false;
+bool abrirEstufa = false;
+bool cerrarEstufa = false;
 
 bool recorrido1 = true;
 bool recorrido2 = false;
@@ -61,6 +67,8 @@ float movAspiradoraZ = 0.0;
 float rotPuerta = 0.0;
 float rotLampara = 0.0;
 float rotAspiradora = 0.0;
+float rotRefrigerador = 0.0;
+float rotEstufa = 0.0;
 
 
 GLfloat deltaTime = 0.0f;
@@ -119,6 +127,7 @@ int main()
     Shader shader("Shaders/modelLoading.vs", "Shaders/modelLoading.frag");
 
     // Load models
+    //Cuarto Principal
     Model TVRocko((char*)"Models/TVRocko/TVRocko.obj");
     Model SillonGrandeRocko((char*)"Models/SillonGrandeRocko/SILLON_ROCKO.obj");
     Model SillonChicoRocko((char*)"Models/Sillon/SillonChico.obj");
@@ -129,6 +138,15 @@ int main()
     Model CuadroRayoRocko((char*)"Models/CuadrosRocko/CuadroRayoRocko.obj");
     Model CuadroGarabatoRocko((char*)"Models/CuadrosRocko/CuadroGarabatoRocko.obj");
     Model PuertaRocko((char*)"Models/Fachada/PuertaRocko.obj");
+
+    //Cocina
+    Model RefriRockoCuerpo((char*)"Models/RefriRocko/RefriRockoCuerpo.obj");
+    Model RefriRockoPuerta((char*)"Models/RefriRocko/RefriRockoPuerta.obj");
+    Model EstufaRockoCuerpo((char*)"Models/EstufaRocko/EstufaRockoCuerpo.obj");
+    Model EstufaRockoPuerta((char*)"Models/EstufaRocko/EstufaRockoPuerta.obj");
+    Model MesaCocinaRocko((char*)"Models/MesaCocinaRocko/MesaCocinaRocko.obj");
+    Model LavamanosRocko((char*)"Models/LavamanosRocko/LavamanosRocko.obj");
+    Model SillaRocko((char*)"Models/SillaRocko/SillaRocko.obj");
 
     glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 
@@ -146,8 +164,10 @@ int main()
         glfwPollEvents();
         DoMovement();
         animacionPuerta();
+        animacionRefrigerador();
         animacionLampara();
         animacionAspiradora();
+        animacionEstufa();
 
         // Clear the colorbuffer
         glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
@@ -242,15 +262,80 @@ int main()
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
         PuertaRocko.Draw(shader);
 
-        //PuertaCocinaDerecha
+        //RefriRockoCuerpo
         model = glm::mat4(1);;
-        model = glm::translate(model, glm::vec3(1.525f, 0.85f, -0.84f));
+        model = glm::translate(model, glm::vec3(0.4f, 0.80f, -1.25f));
+        model = glm::scale(model, glm::vec3(0.18f, 0.18f, 0.18f));
+        model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        PuertaRocko.Draw(shader);
+        RefriRockoCuerpo.Draw(shader);
 
-        //PuertaCocinaIzq
+        //RefriRockoPuerta
         model = glm::mat4(1);;
-        model = glm::translate(model, glm::vec3(-0.48f, 0.85f, -0.84f));
+        model = glm::translate(model, glm::vec3(0.4f, 0.80f, -1.25f));
+        model = glm::scale(model, glm::vec3(0.18f, 0.18f, 0.18f));
+        model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(rotRefrigerador), glm::vec3(0.0f, 1.0f, 0.0));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        RefriRockoPuerta.Draw(shader);
+
+        //EstufaRockoCuerpo
+        model = glm::mat4(1);;
+        model = glm::translate(model, glm::vec3(-0.10f, 0.52f, -2.2f));
+        model = glm::scale(model, glm::vec3(0.18f, 0.18f, 0.18f));
+        model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        EstufaRockoCuerpo.Draw(shader);
+
+        //EstufaRockoPuerta
+        model = glm::mat4(1);;
+        model = glm::translate(model, glm::vec3(-0.10f, 0.52f, -2.2f));
+        model = glm::scale(model, glm::vec3(0.18f, 0.18f, 0.18f));
+        model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(-rotEstufa), glm::vec3(1.0f, 0.0f, 0.0));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        EstufaRockoPuerta.Draw(shader);
+
+        //MesaCocinaRocko
+        model = glm::mat4(1);;
+        model = glm::translate(model, glm::vec3(1.4f, 0.45f, -1.3f));
+        model = glm::scale(model, glm::vec3(0.22f, 0.20f, 0.22f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        MesaCocinaRocko.Draw(shader);
+
+        //Silla1
+        model = glm::mat4(1);;
+        model = glm::translate(model, glm::vec3(1.55f, 0.45f, -1.58f));
+        model = glm::scale(model, glm::vec3(0.25f, 0.25f, 0.25f));
+        model = glm::rotate(model, glm::radians(75.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        SillaRocko.Draw(shader);
+        //Silla2
+        model = glm::mat4(1);;
+        model = glm::translate(model, glm::vec3(1.3f, 0.45f, -1.58f));
+        model = glm::scale(model, glm::vec3(0.25f, 0.25f, 0.25f));
+        model = glm::rotate(model, glm::radians(115.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        SillaRocko.Draw(shader);
+        //Silla3
+        model = glm::mat4(1);;
+        model = glm::translate(model, glm::vec3(1.12f, 0.45f, -1.4f));
+        model = glm::scale(model, glm::vec3(0.25f, 0.25f, 0.25f));
+        model = glm::rotate(model, glm::radians(150.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        SillaRocko.Draw(shader);
+
+        //LavamanosRocko
+        model = glm::mat4(1);;
+        model = glm::translate(model, glm::vec3(0.7f, 0.45f, -2.65f));
+        model = glm::scale(model, glm::vec3(0.26f, 0.22f, 0.24f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        LavamanosRocko.Draw(shader);
+
+        //PuertaCocina
+        model = glm::mat4(1);;
+        model = glm::translate(model, glm::vec3(1.93f, 0.85f, -2.84f));
+        model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
         PuertaRocko.Draw(shader);
 
@@ -296,6 +381,22 @@ void DoMovement()
     {
         cerrarPuerta = true;
     }
+    if (keys[GLFW_KEY_N])
+    {
+        abrirRefrigerador = true;
+    }
+    if (keys[GLFW_KEY_M])
+    {
+        cerrarRefrigerador = true;
+    }
+    if (keys[GLFW_KEY_V])
+    {
+        abrirEstufa = true;
+    }
+    if (keys[GLFW_KEY_B])
+    {
+        cerrarEstufa = true;
+    }
     if (keys[GLFW_KEY_K])
     {
         tirarLampara = true;
@@ -315,6 +416,18 @@ void DoMovement()
     {
         rotLampara = 0.0f;
         rotPuerta = 0.0;
+        rotRefrigerador = 0.0;
+        rotEstufa = 0.0;
+        circuitoAspiradora = false;
+        movAspiradoraX = 0;
+        movAspiradoraZ = 0;
+        rotAspiradora = 0;
+        recorrido1 = true;
+        recorrido2 = false;
+        recorrido3 = false;
+        recorrido4 = false;
+
+
     }
 
 }
@@ -341,6 +454,56 @@ void animacionPuerta() {
     }
     else {
         cerrarPuerta = false;
+    }
+}
+
+void animacionRefrigerador() {
+    if (abrirRefrigerador && rotRefrigerador < 90)
+    {
+        rotRefrigerador += 1.0f;
+        if (rotRefrigerador == 90)
+        {
+            abrirRefrigerador = false;
+        }
+    }
+    else {
+        abrirRefrigerador = false;
+    }
+    if (cerrarRefrigerador && rotRefrigerador > 0)
+    {
+        rotRefrigerador -= 1.0f;
+        if (rotRefrigerador == 0)
+        {
+            cerrarRefrigerador = false;
+        }
+    }
+    else {
+        cerrarRefrigerador = false;
+    }
+}
+
+void animacionEstufa() {
+    if (abrirEstufa && rotEstufa < 90)
+    {
+        rotEstufa += 1.0f;
+        if (rotEstufa == 90)
+        {
+            abrirEstufa = false;
+        }
+    }
+    else {
+        abrirEstufa = false;
+    }
+    if (cerrarEstufa && rotEstufa > 0)
+    {
+        rotEstufa -= 1.0f;
+        if (rotEstufa == 0)
+        {
+            cerrarEstufa = false;
+        }
+    }
+    else {
+        cerrarEstufa = false;
     }
 }
 

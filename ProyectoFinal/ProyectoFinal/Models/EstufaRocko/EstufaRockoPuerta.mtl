@@ -1,0 +1,14 @@
+newmtl EstufaRockoCuerpo:Material
+illum 4
+Kd 0.00 0.00 0.00
+Ka 1.00 1.00 1.00
+Tf 1.00 1.00 1.00
+map_Kd EstufaRockoTextura.jpg
+Ni 1.45
+newmtl EstufaRockoPuerta:Material
+illum 4
+Kd 0.00 0.00 0.00
+Ka 1.00 1.00 1.00
+Tf 1.00 1.00 1.00
+map_Kd EstufaRockoTextura.jpg
+Ni 1.45
